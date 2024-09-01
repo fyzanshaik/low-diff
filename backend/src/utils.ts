@@ -14,9 +14,9 @@ export const hashPassword = async (password: string, saltRounds: number): Promis
 	}
 };
 
-export const generateJWT = async (email: string, password: string, privateKey: string): Promise<string> => {
+export const generateJWT = async (username: string, privateKey: string): Promise<string> => {
 	try {
-		const token = sign({ email: email, password: password }, privateKey);
+		const token = sign({ username: username }, privateKey);
 		return token;
 	} catch (error) {
 		console.error('Unable to sign jwt: ', error);

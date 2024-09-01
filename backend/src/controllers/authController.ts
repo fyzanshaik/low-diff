@@ -6,16 +6,17 @@ export const userSignUpController = async (c: any) => {
 		const User = prisma.user;
 		const { pvtKey, saltRounds } = await getEnvs(c);
 		const body = await c.req.json();
-		const { email, password, name } = body;
+		const { email, password, username, firstName, lastName } = body;
 		const hashedPassword = await hashPassword(password, saltRounds);
 		const response = await User.create({
 			data: {
-				name: name,
+				username: username,
+				name: firstName + ' ' + lastName,
 				password: hashedPassword,
 				email: email,
 			},
 		});
-		const token = await generateJWT(email, hashedPassword, pvtKey);
+		const token = await generateJWT(username, pvtKey);
 		return c.json({
 			token: token,
 			message: 'User has been registered',
@@ -33,20 +34,26 @@ export const userSignInController = async (c: any) => {
 		const body = await c.req.json();
 		const User = prisma.user;
 		const { pvtKey, saltRounds } = await getEnvs(c);
-		const { email, password } = body;
+		const { emailOrUsername, password } = body;
+
 		const hashedPassword = await hashPassword(password, saltRounds);
-		const response = await User.findUnique({
+
+		const response = await User.findFirst({
 			where: {
-				email: email,
-				password: hashedPassword,
+				AND: [
+					{
+						OR: [{ email: emailOrUsername }, { username: emailOrUsername }],
+					},
+					{ password: hashedPassword },
+				],
 			},
 		});
 
 		if (response) {
-			const token = await generateJWT(email, hashedPassword, pvtKey);
+			const token = await generateJWT(response.email, pvtKey);
 			return c.json({
 				token: token,
-				message: 'User Login',
+				message: 'User Login Successful',
 				response: response,
 			});
 		} else {
@@ -56,7 +63,7 @@ export const userSignInController = async (c: any) => {
 			});
 		}
 	} catch (error) {
-		console.error('Error signing up User: ', error);
-		throw new Error('User SignUp Error');
+		console.error('Error signing in User: ', error);
+		return c.status(500).json({ error: 'User SignIn Error' });
 	}
 };

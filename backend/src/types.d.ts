@@ -6,6 +6,10 @@ export interface HonoBindings {
 	PRIVATE_KEY: string;
 }
 
+export interface HonoVariables {
+	userId: string;
+}
+
 export interface EnvConfig {
 	pvtKey: string;
 	saltRounds: number;
