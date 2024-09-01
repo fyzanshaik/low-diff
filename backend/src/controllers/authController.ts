@@ -6,12 +6,14 @@ export const userSignUpController = async (c: any) => {
 		const prisma = await clientInitialization(c);
 		const User = prisma.user;
 		const { pvtKey, saltRounds } = await getEnvs(c);
+		// const rawBody = await c.req.text();
 		const body = await c.req.json();
+		console.log('Parsed JSON Body:', body);
 
 		const { success, data, error } = signUpInput.safeParse(body);
-
+		console.log(data);
 		if (!success) {
-			return c.status(400).json({ errors: error.errors });
+			return c.json({ errors: error.errors });
 		}
 
 		const { email, password, username, firstName, lastName } = data;
