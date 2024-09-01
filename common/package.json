@@ -1,0 +1,38 @@
+{
+	"name": "@fyzanshaik/medium-common",
+	"version": "1.0.0",
+	"description": "Shared schemas and types for frontend and backend",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"scripts": {
+		"build": "tsc",
+		"prepublishOnly": "npm run build"
+	},
+	"type": "module",
+	"devDependencies": {
+		"@types/bun": "latest",
+		"typescript": "^5.0.0"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	},
+	"dependencies": {
+		"zod": "^3.23.8"
+	},
+	"publishConfig": {
+		"access": "public",
+		"keywords": [
+			"typescript",
+			"zod",
+			"shared",
+			"schemas",
+			"types"
+		],
+		"author": "Faizan Shaik",
+		"license": "MIT"
+	}
+}

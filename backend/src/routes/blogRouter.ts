@@ -1,5 +1,5 @@
 import { Hono, HonoRequest } from 'hono';
-import { HonoBindings } from '../types';
+import { HonoBindings } from '../types/types';
 import { handleMiddleware } from '../middlewares/authMiddleware';
 import { addUserBlog, deleteUserBlog, editUserBlog, getAllBlogs, getUserBlogs } from '../controllers/blogController';
 const blogRouter = new Hono<{ Bindings: HonoBindings; Variables: HonoRequest }>();

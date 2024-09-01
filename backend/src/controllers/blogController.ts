@@ -1,4 +1,5 @@
 import clientInitialization from '../prismaClient';
+import { blogSchema, updateBlogSchema } from '../types/schema';
 /**
  * Add blogs POST
  * edit blogs PUT
@@ -12,8 +13,11 @@ export const addUserBlog = async (c: any) => {
 		const prisma = await clientInitialization(c);
 		const Post = prisma.post;
 		const userId = c.get('userId');
-		const { title, content } = c.req.json();
-		//add zod validation and type check
+		const { success, data, error } = blogSchema.safeParse(c.req.json());
+		if (!success) {
+			return c.status(400).json({ errors: error.errors });
+		}
+		const { title, content } = data;
 
 		const blog = await Post.create({
 			data: {
@@ -38,8 +42,11 @@ export const editUserBlog = async (c: any) => {
 		const prisma = await clientInitialization(c);
 		const Post = prisma.post;
 		const userId = c.get('userId');
-		const { title, content } = c.req.json();
-		//add zod validation and type check
+		const { success, data, error } = updateBlogSchema.safeParse(c.req.json());
+		if (!success) {
+			return c.status(400).json({ errors: error.errors });
+		}
+		const { title, content } = data;
 		const id = c.req.param('id');
 		const blog = await Post.findFirst({
 			where: {
@@ -127,8 +134,6 @@ export const getUserBlogs = async (c: any) => {
 		const prisma = await clientInitialization(c);
 		const Post = prisma.post;
 		const userId = c.get('userId');
-		//add zod validation and type check
-
 		const allBlogs = await Post.findMany({
 			where: { authorId: userId },
 		});

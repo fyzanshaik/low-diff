@@ -1,17 +1,30 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "strict": true,
-    "skipLibCheck": true,
+    "target": "ESNext", // Target the latest ECMAScript version
+    "module": "ESNext", // Use ESNext module resolution
+    "moduleResolution": "Bundler", // Bundler module resolution (for Webpack, etc.)
+    "strict": true, // Enable all strict type-checking options
+    "skipLibCheck": true, // Skip type checking of declaration files
     "lib": [
       "ESNext"
-    ],
+    ], // Include standard library
     "types": [
       "@cloudflare/workers-types/2023-07-01"
-    ],
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx"
+    ], // Types specific to Cloudflare Workers
+    "jsx": "react-jsx", // JSX setting for React with automatic runtime
+    "jsxImportSource": "hono/jsx", // Import source for JSX (specific to Hono)
+    "declaration": true, // Generate .d.ts files
+    "declarationMap": true, // Generate source maps for .d.ts files
+    "outDir": "./dist", // Output directory for compiled files
+    "rootDir": "./src", // Root directory of your TypeScript files
+    "esModuleInterop": true, // Enables ES module interop
+    "forceConsistentCasingInFileNames": true // Enforce consistent casing in imports
   },
+  "include": [
+    "src/**/*"
+  ], // Include all TypeScript files in the src directory
+  "exclude": [
+    "node_modules",
+    "dist"
+  ] // Exclude node_modules and dist from the compilation
 }

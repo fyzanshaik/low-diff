@@ -1,22 +1,32 @@
 import clientInitialization from '../prismaClient';
 import { hashPassword, generateJWT, getEnvs } from '../utils';
+import { signInInput, signUpInput } from '../types/schema';
 export const userSignUpController = async (c: any) => {
 	try {
 		const prisma = await clientInitialization(c);
 		const User = prisma.user;
 		const { pvtKey, saltRounds } = await getEnvs(c);
 		const body = await c.req.json();
-		const { email, password, username, firstName, lastName } = body;
+
+		const { success, data, error } = signUpInput.safeParse(body);
+
+		if (!success) {
+			return c.status(400).json({ errors: error.errors });
+		}
+
+		const { email, password, username, firstName, lastName } = data;
 		const hashedPassword = await hashPassword(password, saltRounds);
 		const response = await User.create({
 			data: {
 				username: username,
-				name: firstName + ' ' + lastName,
+				name: `${firstName} ${lastName}`,
 				password: hashedPassword,
 				email: email,
 			},
 		});
+
 		const token = await generateJWT(username, pvtKey);
+
 		return c.json({
 			token: token,
 			message: 'User has been registered',
@@ -24,7 +34,7 @@ export const userSignUpController = async (c: any) => {
 		});
 	} catch (error) {
 		console.error('Error signing up User: ', error);
-		throw new Error('User SignUp Error');
+		return c.status(500).json({ message: 'User SignUp Error' });
 	}
 };
 
@@ -34,7 +44,12 @@ export const userSignInController = async (c: any) => {
 		const body = await c.req.json();
 		const User = prisma.user;
 		const { pvtKey, saltRounds } = await getEnvs(c);
-		const { emailOrUsername, password } = body;
+		const { success, data, error } = signInInput.safeParse(body);
+		if (!success) {
+			return c.status(400).json({ errors: error.errors });
+		}
+
+		const { emailOrUsername, password } = data;
 
 		const hashedPassword = await hashPassword(password, saltRounds);
 

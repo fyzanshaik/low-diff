@@ -1,5 +1,5 @@
 import { sign, verify } from 'hono/jwt';
-import { EnvConfig } from './types';
+import { EnvConfig } from './types/types';
 export const hashPassword = async (password: string, saltRounds: number): Promise<string> => {
 	try {
 		const encoder = new TextEncoder();

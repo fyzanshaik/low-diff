@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { userSignInController, userSignUpController } from '../controllers/authController';
-import { HonoBindings } from '../types';
+import { HonoBindings } from '../types/types';
 const userRouter = new Hono<{ Bindings: HonoBindings }>();
 
 userRouter.post('/signup', userSignUpController);

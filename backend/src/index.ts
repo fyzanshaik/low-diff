@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { userRouter } from './routes/userAuth';
-import { HonoBindings } from './types';
+import { HonoBindings } from './types/types';
 import { cors } from 'hono/cors';
 import { blogRouter } from './routes/blogRouter';
 
